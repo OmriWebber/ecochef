@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    {% include ['head.html'] %}
+    <body>
+        
+        {% include ['navbar.html'] %}
+        {% include ['confirmModal.html'] %}
+        <div class="container">
+            <div class="row showRecipe">
+                <div class="col-12">
+                    <img class="recipeImage" src="{{ recipe.imageURL }}">
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <h2 class="col-6">{{recipe.title}}</h2>
+                        <span class="prepTimeTitle col-3">Prep Time:<br><span class="prepTime">{{recipe.prepTime}}</span></span>
+                        <span class="cookTimeTitle col-3">Cook Time:<br><span class="cookTime">{{recipe.cookTime}}</span></span>
+
+                    </div>
+                    
+                    <div class="row recipeIngredients">
+                        <p class="recipeIngredientsTitle">Ingredients:</p>
+                        {% for ingredient in recipe.ingredients %}
+                            <p class="col-6">- {{ ingredient.name }}</p>
+                        {% endfor %}
+                        <a class="add-ingredients-to-shoppinglist-button btn btn-light" href="/addToShoppingList/{{ingredientIDs}}"><i class="fa fa-add"></i> Add Ingredients to Shopping List</a>
+
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="vstack gap-3">
+                        <a class="save-recipe-button btn btn-light" href="/saveRecipe/{{recipe.id}}"><i class="fa fa-floppy-disk"></i> Save Recipe</a>
+                        <a class="edit-recipe-button btn btn-success" href="/editRecipe/{{recipe.id}}"> <i class="fa fa-pencil"></i> Edit Recipe</a>
+                        <button class="delete-recipe-button btn btn-danger" data-title={{recipe.title}} data-id={{recipe.id}} data-bs-toggle="modal" data-bs-target="#confirmModal"><i class="fa fa-trash"></i> Delete Recipe</button>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <h3 class="recipeMethodTitle">Method</h3>
+                    <p class="recipeMethod">{{method}}</p>
+                </div>
+            </div>
+        </div>
+
+        {% include ['footer.html'] %}
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    </body>
+</html>

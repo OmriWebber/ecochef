@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  {% include ['head.html'] %}
+  <body>
+    {% include ['navbar.html'] %}
+    <div class="container login-container">
+      {% if msg %}
+        <div class="alert alert-danger alert-dismissible">
+          <a href="#" class="close" data-bs-dismiss="alert" aria-label="close" style="text-decoration: none;color: red;font-size: initial;">{{msg}} &times;</a>
+        </div>
+      {% endif %}
+        <div class="row justify-content-center">
+          <center><h1>Login</h1></center>
+          <form method="post">
+            <div class="row justify-content-center">
+              <label for="username">Username</label>
+              <input class="col-12 text-input" type="text" name="username" id="username" required><br>
+            </div>
+            <div class="row justify-content-center">
+              <label for="password">Password</label>
+              <input class="col-12 text-input" type="password" name="password" id="password" required><br>
+            </div>
+            <div class="spacer"></div>
+            <div class="row buttons justify-content-between">
+              <input class="col-12 btn btn-success" type="submit" value="Log In">
+            </div>
+            <div class="row">
+              <a class="col-8 col-offset-2 btn btn-light" href="{{ url_for('auth.register') }}">Create Account</a>
+            </div>
+            <div class="row">
+              <a class="col-12 forgotPassword" href="{{ url_for('index') }}">Forgot Password?</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+  </body>
+
+</html>
+
+
