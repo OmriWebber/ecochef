@@ -7,26 +7,29 @@
     <div class="container login-container">
         <p>{{ msg }}</p>
         <div class="row justify-content-center">
-          <center><h1>Create an Account</h1></center>
+          <center><h1>Register</h1></center>
           <form method="post">
             <div class="row justify-content-center">
-              <input class="col-12 btn btn-light" type="text" placeholder="Username" name="username" id="username" required><br>
+              <input class="col-12 text-input" type="text" placeholder="Username" name="username" id="username" required><br>
             </div>
             <div class="row justify-content-center">
-              <input class="col-12 btn btn-light" type="email" placeholder="Email" name="email" id="email" required><br>
+              <input class="col-12 text-input" type="email" placeholder="Email" name="email" id="email" required><br>
             </div>
             <div class="row justify-content-center">
-              <input class="col-12 btn btn-light" type="password" placeholder="Password" name="password" id="password" required><br>
+              <input class="col-12 text-input" type="password" placeholder="Password" name="password" id="password" required><br>
             </div>
             <div class="row justify-content-center">
-              <input class="col-12 btn btn-light" type="password" placeholder="Confirm Password" name="confirmPassword" id="confirmPassword" required><br>
+              <input class="col-12 text-input" type="password" placeholder="Confirm Password" name="confirmPassword" id="confirmPassword" required><br>
             </div>
-            <div class="row buttons justify-content-between">
-              <div class="col-8">
+            <div class="row">
+              
+              <input class="col-12 btn btn-success" type="submit" value="Register">
+            </div>
+            <div class="row">
+              <div class="col-12 alreadyHaveAccount">
                 <span>Already have an account?</span>
                 <a href="/auth/login" class="btn btn-light login">Login Instead</a>
               </div>
-              <input class="col-4 btn btn-success" type="submit" value="Create Account">
             </div>
           </form>
         </div>

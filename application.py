@@ -1,42 +1,26 @@
-from flask import Flask, render_template, request, redirect, jsonify, Markup, url_for, flash
+from flask import Flask, render_template, request, redirect, jsonify, Markup, url_for, flash, session
 from flask_login import LoginManager, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from flask_ckeditor import CKEditor
 from flask_cdn import CDN
-import os, json, pymysql, chardet, re
-
+import os, json, pymysql, chardet, util, requests
 from models import *
-from quicktype.recipeType import recipe_from_dict
-
+from quicktype.recipeType import recipe_from_dict, recipe_to_dict
 from ingredient_parser import parse_ingredient
-
-pymysql.install_as_MySQLdb()
-
-UPLOAD_FOLDER = 'static/img/recipeImages/'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+from config import Config
 
 application = Flask(__name__)
-application.secret_key = 'dev'
-application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-application.config['CDN_DOMAIN'] = 'dk2cs70wwok20.cloudfront.net'
-application.config['CDN_TIMESTAMP'] = False
-
-ckeditor = CKEditor(application)
+application.config.from_object(Config)
 
 # If application detects rds database, use cloud database, if not use localhost
 if 'RDS_HOSTNAME' in os.environ:
-    print('AWS ELB ENV DETECTED')
     CDN(application)
-    RDS_Connection_String = 'mysql+pymysql://' + os.environ['RDS_USERNAME'] + ':' + os.environ['RDS_PASSWORD'] + '@' + os.environ['RDS_HOSTNAME'] + ':' + os.environ['RDS_PORT'] + '/' + os.environ['RDS_DB_NAME']
-    application.config['SQLALCHEMY_DATABASE_URI'] = RDS_Connection_String
-else:
-    print('LOCAL ENV DETECTED')
-    application.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:@localhost:3306/ecochef"
 
+    
 db.init_app(application)
 migrate.init_app(application, db)
+ckeditor = CKEditor(application)
 
 # Init Login Manager
 login_manager = LoginManager()
@@ -51,155 +35,45 @@ def load_user(user_id):
 from auth import auth as auth_blueprint
 application.register_blueprint(auth_blueprint)
 
-def allowed_file(filename):     
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def logThis(function, user, userID, recipe, recipeID):
-    date = datetime.now()
-    dateString = str(date)
-    tuple = ('[',dateString,'] ',user,':',userID,' ',function,' ',recipe,':',recipeID)
-    log = "".join(map(str, tuple))
-    with open("log.txt", "a+") as file_object:
-        # Move read cursor to the start of file.
-        file_object.seek(0)
-        # If file is not empty then append '\n'
-        data = file_object.read(100)
-        if len(data) > 0 :
-            file_object.write("\n")
-        file_object.write(log)
-
-def populate():
-    with open('allrecipes.json', 'rb') as f:
-        result = chardet.detect(f.read())
-
-    with open('allrecipes.json', encoding=result['encoding']) as f:
-        data = json.load(f)
-    
-    for count, i in enumerate(data):
-        recipe = recipe_from_dict(i)
-        id = count
-        title = recipe.title
-        description = recipe.description
-        category = recipe.category
-        ratingAvg = recipe.aggregate_rating.rating_value
-        ratingCount = recipe.aggregate_rating.rating_count
-        prepTime = recipe.prep_time
-        cookTime = recipe.cook_time
-        servings = recipe.servings
-        dateCreated = recipe.date_published
-        
-        instructions = []
-        for step in recipe.instructions:
-            instructions.append(step.text)
-        
-        # Get Image Url
-        if recipe.image and recipe.image is not None:
-            imageURL = recipe.image.url
-        else:
-            imageURL = 'default.jpg'
-            
-        
-        # Get Video Url
-        try:
-            if recipe.video and recipe.video != 'No Video':
-                videoURL = recipe.video.embed_url
-        except:
-            videoURL = 'No Video'
-            
-        
-        new_recipe = Recipes(title=title,
-                            category=category[0],
-                            description=description,
-                            instructions=instructions[0],
-                            imageURL=imageURL,
-                            videoURL=videoURL,
-                            prepTime=prepTime,
-                            cookTime=cookTime,
-                            ratingAvg=ratingAvg,
-                            ratingCount=ratingCount,
-                            servings=servings,
-                            dateCreated=dateCreated)
-            
-        for ingredient in recipe.ingredients:
-            parsedIngredient = parse_ingredient(ingredient)
-            print(parsedIngredient)
-            newIngredient = Ingredients(name=parsedIngredient['name'], 
-                                        amount=parsedIngredient['quantity'], 
-                                        unit=parsedIngredient['unit'])
-            new_recipe.ingredients.append(newIngredient)
-       
-            
-        for review in recipe.reviews:
-            review = Reviews(author=review.name, 
-                             rating=review.rating, 
-                             body=review.body)
-            new_recipe.reviews.append(review)
-        
-        
-        nutrition = Nutrition(calories = recipe.nutrition.calories,
-                  carbohydrate = recipe.nutrition.carbohydrate,
-                  cholesterol = recipe.nutrition.cholesterol,
-                  fiber = recipe.nutrition.fiber,
-                  protein = recipe.nutrition.protein,
-                  saturatedFat = recipe.nutrition.saturated_fat,
-                  sodium = recipe.nutrition.sodium,
-                  sugar = recipe.nutrition.sugar,
-                  fat = recipe.nutrition.fat,
-                  unsaturatedFat = recipe.nutrition.unsaturated_fat) 
-        new_recipe.nutrition.append(nutrition)
-        
-        print('NEW RECIPE =', new_recipe)
-        db.session.add(new_recipe)
-        db.session.commit()
-    f.close()
-    
-def reverse_readline(filename, buf_size=8192):
-    # A generator that returns the lines of a file in reverse order
-    with open(filename) as fh:
-        segment = None
-        offset = 0
-        fh.seek(0, os.SEEK_END)
-        file_size = remaining_size = fh.tell()
-        while remaining_size > 0:
-            offset = min(file_size, offset + buf_size)
-            fh.seek(file_size - offset)
-            buffer = fh.read(min(remaining_size, buf_size))
-            remaining_size -= buf_size
-            lines = buffer.split('\n')
-            # The first line of the buffer is probably not a complete line so
-            # we'll save it and append it to the last line of the next buffer
-            # we read
-            if segment is not None:
-                # If the previous chunk starts right from the beginning of line
-                # do not concat the segment to the last line of new chunk.
-                # Instead, yield the segment first 
-                if buffer[-1] != '\n':
-                    lines[-1] += segment
-                else:
-                    yield segment
-            segment = lines[0]
-            for index in range(len(lines) - 1, 0, -1):
-                if lines[index]:
-                    yield lines[index]
-        # Don't yield None if the file was empty
-        if segment is not None:
-            yield segment
-
 
 @application.route("/")
 def index():
-    # populate()    # Uncomment this line to populate database with test data.
-    recipes=Recipes.query.all()
-    return render_template("index.html", recipes=recipes, name="Ecochef", user=current_user)
+    # util.populate()    # Uncomment this line to populate database with test data.
+    url = Config.API_URL + '/recipes'
+    response = requests.get(url)
+    if response.status_code == 404:
+        recipes = "No Recipes Found"
+        flash("No Recipes Found", 404)
+    elif response.status_code == 100:
+        recipes = "Incorrect Query"
+        flash("Incorrect Query", 100)
+    else:
+        recipes = response.json()
+        return render_template("index.html", recipes=recipes, name="Ecochef", user=current_user)
+    print(recipes)
+    return render_template("index.html", name="Ecochef", user=current_user)
+    
+
+
+
+
+
+
+
+
+
+
 
 
 @application.route("/createRecipe", methods=["POST", "GET"])
 @login_required
 def createRecipe():
+    url = Config.API_URL + '/recipe'
+    
     if request.method == "POST":
         # store values recieved from HTML form in local variables
         title=request.form.get("title")
-        method=request.form.get("ckeditor")
+        instructions=request.form.get("ckeditor")
         category=request.form.get("category")
         servings=request.form.get("servings")
         prepTime=request.form.get("prepTime")
@@ -213,7 +87,7 @@ def createRecipe():
         file=request.files['recipeImage']
         if file.filename == '':
             print("No selected file")
-        if file and allowed_file(file.filename):
+        if file and util.allowed_file(file.filename):
             filename = secure_filename(file.filename)
             imageURL = os.path.join(application.config['UPLOAD_FOLDER'], filename)
             imageURLforDB = os.path.join('img/recipeImages/', filename)
@@ -221,12 +95,12 @@ def createRecipe():
         
         # Creating Recipe Object
         recipe = Recipes(title=title,
-                         method=method,
-                         category=category,
-                         imageURL=imageURLforDB,
-                         servings=servings,
-                         prepTime=prepTime,
-                         cookTime=cookTime)
+                            instructions=instructions,
+                            category=category,
+                            imageURL=imageURLforDB,
+                            servings=servings,
+                            prepTime=prepTime,
+                            cookTime=cookTime)
         
         # Populating Recipe with user submitted ingredients
         for x in range(int(count)):
@@ -235,10 +109,20 @@ def createRecipe():
             ingredient = Ingredients(name=ingredientName)
             recipe.ingredients.append(ingredient)
 
+        payload = json.dumps(recipe.format())
+        headers = {
+        'x-access-token': current_user.api_token,
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic QWRtaW46MTIzNDU='
+        }
+
+        response = requests.post(url, headers=headers, data=payload)
+
+        print(response.text)
         # Adding and commiting new recipe to database
         db.session.add(recipe)
         db.session.commit()
-        flash('Recipe Created.')
+        flash('Recipe Created.', 200)
         return redirect(url_for('index'))
     return render_template("createRecipe.html", name="Ecochef", user=current_user)
 
@@ -262,16 +146,26 @@ def deleteRecipe(id):
     db.session.commit()
     flash('Recipe Deleted')
     
-    logThis("deleted", current_user.username, current_user.id, recipe.title, recipe.id)
+    util.logThis("deleted", current_user.username, current_user.id, recipe.title, recipe.id)
     return redirect(url_for('index'))
 
 
 @application.route("/profile")
 @login_required
 def profile():
-    skip = Users.query.filter_by(id=current_user.id).first()
-    users = Users.query.all()
-        
+    url = Config.API_URL + "/user/" + str(current_user.id)
+    token = util.get_token(current_user)
+    payload = {}
+    headers = {
+    'x-access-token': token,
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    url = Config.API_URL + "/users"
+    response = requests.request("GET", url, headers=headers, data=payload)
+    print(response.json().users)
+    users = response.json()
     logs = []
     for line in reversed(list(open("log.txt"))):
         logs.append(line.rstrip())
@@ -295,7 +189,7 @@ def makeAdmin(id):
         print(user)
         user.is_Admin = True
         db.session.commit()
-        logThis("Made Admin", current_user.username, current_user.id, user.username, user.id)
+        util.logThis("Made Admin", current_user.username, current_user.id, user.username, user.id)
         flash(user.username + ' is now an Admin')
     else:
         flash('You need to be admin to do that!')
@@ -310,7 +204,7 @@ def revokeAdmin(id):
         print(user)
         user.is_Admin = False
         db.session.commit()
-        logThis("Revoked Admin", current_user.username, current_user.id, user.username, user.id)
+        util.logThis("Revoked Admin", current_user.username, current_user.id, user.username, user.id)
         flash(user.username + ' is no longer an Admin')
     else:
         flash('You need to be admin to do that!')
@@ -379,7 +273,7 @@ def editRecipe(id):
         file=request.files['recipeImage']
         if file.filename == '':
             print("No selected file")
-        if file and allowed_file(file.filename):
+        if file and util.allowed_file(file.filename):
             filename = secure_filename(file.filename)
             imageURL = os.path.join(application.config['UPLOAD_FOLDER'], filename)
             imageURLforDB = os.path.join('img/recipeImages/', filename)

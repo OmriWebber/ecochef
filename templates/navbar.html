@@ -28,7 +28,7 @@
             <a class="nav-link" href="{{ url_for('index') }}">Favourites</a>
             <a class="nav-link" href="{{ url_for('index') }}">Search</a>
             <a class="nav-link" href="{{ url_for('index') }}">Shopping List</a>
-            <a class="nav-link" href="{{ url_for('index') }}">Create a Recipe</a>
+            <a class="nav-link" href="{{ url_for('createRecipe') }}">Create a Recipe</a>
             <span class="spacer"></span>
             <a class="nav-link user-name" href="{{ url_for('profile') }}"><span class="user-container"><span class="user-bg"><p class="user-letter"></p></span></span> {{ user.username }}</a>
             <a class="nav-link logout" href="{{ url_for('auth.logout') }}">Logout</a>

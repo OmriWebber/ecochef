@@ -4,12 +4,15 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from models import Users, db
+from config import Config
+import requests
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 # Register Route
 @auth.route('/register', methods=('GET', 'POST'))
 def register():
+    url = Config.API_URL + '/createuser'
     if request.method == 'POST':
         logout_user()
         username = request.form['username']
@@ -36,12 +39,12 @@ def register():
 
 @auth.route('/login', methods=('GET', 'POST'))
 def login():
+    url = Config.API_URL + '/login'
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         password = request.form['password']
         
         user = Users.query.filter_by(username=username).first()
-        
         if user is None:
             flash('Username dosnt exist. Please try again')
         elif not check_password_hash(user.password, password):
@@ -49,6 +52,7 @@ def login():
         elif user:
             # Create session data, we can access this data in other routes
             login_user(user, remember=True)
+            current_user.token = requests.request("GET", url)
             flash('Login Successful')
             # Redirect to home page
             return redirect(url_for('index'))

@@ -278,10 +278,10 @@ th {
   padding: 10px 0px;
   border-radius: 50px;
   margin: 0 auto;
-  filter: drop-shadow(0px 3px 10px #151515);
+  filter: drop-shadow(0px 3px 3px rgba(21, 21, 21, 0.4039215686));
 }
 .login-container .btn-light {
-  border: 2px solid #99C731;
+  border: 4px solid #99C731;
   color: #99C731;
   font-weight: 600;
 }
@@ -300,6 +300,14 @@ th {
   color: black;
   text-decoration: none;
   text-align: center;
+}
+.login-container .alreadyHaveAccount {
+  color: black;
+  text-decoration: none;
+  text-align: center;
+}
+.login-container .alreadyHaveAccount .btn {
+  margin-top: 10px;
 }
 
 #ingredientsList {
@@ -328,8 +336,23 @@ th {
   filter: drop-shadow(5px 5px 8px #151515);
 }
 
-.featuredRecipesTitle {
-  margin-bottom: 50px;
+.featured-container {
+  height: 230px;
+}
+.featured-container .mySlides {
+  height: 100%;
+}
+.featured-container .mySlides .featured-image {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.featured-container .mySlides .overlay {
+  max-height: 150px;
+  position: relative;
+  margin-top: -88px;
+  background-color: rgba(255, 255, 255, 0.5019607843);
 }
 
 .showRecipe {

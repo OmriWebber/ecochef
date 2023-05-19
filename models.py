@@ -9,6 +9,7 @@ from flask_migrate import Migrate
 db = SQLAlchemy()
 migrate = Migrate()
 
+
 # Users Table Model
 class Users(UserMixin, db.Model):
     __tablename__ = "Users"
@@ -21,9 +22,16 @@ class Users(UserMixin, db.Model):
     is_Admin = Column(Boolean, nullable=False, default=False)
     dateCreated = Column(DateTime, default=datetime.utcnow)
     
-    def __repr__(self):
-        template = '{0.id} {0.username} {0.savedRecipes} {0.email} {0.shoppingList} {0.is_Admin} {0.dateCreated}'
-        return template.format(self)
+    def format(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'password': self.password,
+            'savedRecipes': [recipe.format() for recipe in self.savedRecipes],
+            'shoppingList': [item.format() for item in self.shoppingList],
+            'is_Admin': self.is_Admin,
+            'dateCreated': self.dateCreated
+        }
 
 # Recipes Table Model
 class Recipes(db.Model):
@@ -44,10 +52,26 @@ class Recipes(db.Model):
     ratingCount = Column(String(10), nullable=True)
     nutrition = relationship("Nutrition", backref='recipe', cascade='all, delete-orphan')
     dateCreated = Column(DateTime, default=datetime.utcnow)
-    
-    def __repr__(self):
-        template = '{0.id} {0.title} {0.category}'
-        return template.format(self)
+
+    def format(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'ingredients': [ingredient.format() for ingredient in self.ingredients],
+            'instructions': self.instructions,
+            'imageURL': self.imageURL,
+            'videoURL': self.videoURL,
+            'category': self.category,
+            'prepTime': self.prepTime,
+            'cookTime': self.cookTime,
+            'servings': self.servings,
+            'reviews': [review.format() for review in self.reviews],
+            'ratingAvg': self.ratingAvg,
+            'ratingCount': self.ratingCount,
+            'nutrition': [nutrition.format() for nutrition in self.nutrition],
+            'dateCreated': self.dateCreated
+        }
 
 
 # Ingredients Table Model
@@ -59,9 +83,14 @@ class Ingredients(db.Model):
     amount = Column(String(100), nullable=True)
     recipe_id = Column(Integer, ForeignKey("Recipes.id"))
     
-    def __repr__(self):
-        template = '{0.id} {0.name}'
-        return template.format(self)
+    def format(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'unit': self.unit,
+            'amount': self.amount,
+            'recipe_id': self.recipe_id
+        }
     
     
 class Nutrition(db.Model):
@@ -79,9 +108,21 @@ class Nutrition(db.Model):
     unsaturatedFat = Column(String(100), nullable=True)
     recipe_id = Column(Integer, ForeignKey("Recipes.id"))
     
-    def __repr__(self):
-        template = '{0.id} {0.calories}'
-        return template.format(self)
+    def format(self):
+        return {
+            'id': self.id,
+            'calories': self.calories,
+            'carbohydrate': self.carbohydrate,
+            'cholesterol': self.cholesterol,
+            'fiber': self.fiber,
+            'protein': self.protein,
+            'saturatedFat': self.saturatedFat,
+            'sodium': self.sodium,
+            'sugar': self.sugar,
+            'fat': self.fat,
+            'unsaturatedFat': self.unsaturatedFat,
+            'recipe_id': self.recipe_id
+        }
     
     
 class Reviews(db.Model):
@@ -92,20 +133,28 @@ class Reviews(db.Model):
     body = Column(String(300), nullable=True)
     recipe_id = Column(Integer, ForeignKey("Recipes.id"))
     
-    def __repr__(self):
-        template = '{0.id} {0.author} {0.rating} {0.body} {0.recipe_id}'
-        return template.format(self)
+    def format(self):
+        return {
+            'id': self.id,
+            'author': self.author,
+            'rating': self.rating,
+            'body': self.body,
+            'recipe_id': self.recipe_id
+        }
     
     
 class shoppingList(db.Model):
     __tablename__ = "shoppingList"
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("Users.id"))
-    ingredient = Column(String(100), nullable=False)
+    ingredient_id = Column(Integer)
     
-    def __repr__(self):
-        template = '{0.ingredient}'
-        return template.format(self)
+    def format(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'ingredient_id': self.ingredient_id
+        }
     
     
 # SavedRecipes Table Model
@@ -115,8 +164,9 @@ class savedUserRecipes(db.Model):
     user_id = Column(Integer, ForeignKey("Users.id"))
     recipe_id = Column(Integer)
     
-    def __repr__(self):
-        template = '{0.id} {0.user_id} {0.recipe_id}'
-        return template.format(self)
-    
-    
+    def format(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'recipe_id': self.recipe_id
+        }
