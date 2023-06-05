@@ -1,0 +1,32 @@
+<div class="container results-container">
+    <div class="row">
+        <div class="col">
+            <h2 class="title">Search Results</h2>
+        </div>
+    </div>
+    <div class="recipeGrid">
+        {% for recipe in recipes.recipes[:10] | sort(attribute='ratingAvg') %}
+            {% if loop.index % 2 == 1 %}
+                <div class="row">
+            {% endif %}
+
+                    <div class="col recipe">
+                        <a href="">
+                            <img class="recipe-image" src={{ recipe.imageURL }}>
+                            <div class="favorite-overlay">
+                                <a class="heart">
+                                    <i class="fa fa-heart"></i>
+                                </a>
+                            </div>
+                            <div class="overlay">
+                                <p class="recipe-title">{{ recipe.title }}</p>
+                            </div>
+                        </a>
+                    </div>
+
+            {% if loop.index % 2 == 0 %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>

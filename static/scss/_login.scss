@@ -1,0 +1,75 @@
+/* Login Styling */
+  
+.login-container {
+    width: 80%;
+
+    .text-input {
+        border: none;
+        background-color: #e0e0e0;
+        border-bottom: 2px solid $bodyTextColor;
+        text-align: left;
+        padding: 10px;
+        border-radius: 5px 5px 0px 0px;
+
+        &:focus-visible {
+            outline: none;
+        }
+    }
+  
+    h1 {
+      padding: 50px 0 50px 0;
+      color: $bodyTextColor;
+    }
+  
+    .row {
+      margin-bottom: 30px;
+
+      label {
+        margin-left: 0px;
+        padding: 0px;
+        font-size: 12px;
+      }
+    }
+  
+    .btn {
+      padding: 10px 0px;
+      border-radius: 50px;
+      margin: 0 auto;
+      filter: drop-shadow(0px 3px 3px $shadowTextColor);
+    }
+
+    .btn-light {
+        border: 4px solid $primaryColor;
+        color: $primaryColor;
+        font-weight: 600;
+    }
+
+    .btn-success {
+        background-color: $primaryColor;
+        border: none;
+        font-weight: 600;
+    }
+  
+    .buttons {
+      margin-top: 30px;
+    }
+  
+    a.login {
+      padding: 10px 20px;
+    }
+
+    .forgotPassword {
+        color: black;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .alreadyHaveAccount {
+      color: black;
+      text-decoration: none;
+      text-align: center;
+      .btn {
+        margin-top: 10px;
+      }
+    }
+  }

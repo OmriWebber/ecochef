@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    {% include ['head.html'] %}
+    <body>
+        
+        {% include ['navbar.html'] %}
+        {% include ['confirmModal.html'] %}
+        <!-- Featured container -->
+        <div class="container search-container">
+            <div class="row">
+                <div class="col">
+                    <h2 class="title">Search</h2>
+                </div>
+            </div>
+            <div class="row toggler">
+                <a href="#" class="col slide-name active">By Name</a>
+                <a href="#" class="col slide-ingredient">By Ingredient</a>
+            </div>
+            
+
+            <!-- Swiper -->
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <form action="{{ url_for('search') }}" method="POST">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Search..." name="search">
+                                <button class="btn" type="submit"><i class="fa fa-magnifying-glass"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="swiper-slide">
+                        <form id="ingredient-form" action="{{ url_for('search') }}" method="POST">
+                            <div class="ingredient-cotainer">
+                                <div class="input-group mb-3">
+                                    <a class="btn remove-ingredient"><i class="fa fa-times"></i></a>
+                                    <input type="text" class="form-control" placeholder="Enter Ingredient" name="ingredient-name">
+                                    <a class="btn edit-ingredient"><i class="fa fa-pencil"></i></a>
+                                </div>
+                            </div>
+                            <div class="search-button-container">
+                                <button class="btn btn-primary" type="submit">Search</button>
+                            </div>
+                        </form>
+                        <div class="add-ingredient-container">
+                            <a class="btn btn-secondary add-ingredient"><i class="fa fa-plus"></i>Add Ingredient</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+            
+
+        {% include ['footer.html'] %}
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+        <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+
+
+    </body>
+</html>

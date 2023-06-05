@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    {% include ['head.html'] %}
+    <body>
+        
+        {% include ['navbar.html'] %}
+        {% include ['confirmModal.html'] %}
+        <div class="container-fluid recipe-container">
+            <div class="row">
+                <div class="col-4 goBackButton">
+                    <a onclick="history.back()"><i class="fa fa-arrow-left"></i> Go Back</a>
+                </div>
+                <img class="recipeImage" src="{{ recipe.imageURL }}">
+            </div>
+
+            <div class="recipeDetails">
+                <div class="row">
+                    <div class="col-8 recipeTitleContainer">
+                        <h3 class="recipeTitle">{{recipe.title}}</h3>
+                        <a class="saveRecipeButton" href="/saveRecipe/{{recipe.id}}">
+                            <i class="fa-regular fa-heart"></i>
+                        </a>
+                    </div>
+
+                    <div class="col-4">
+                        <p class="rating-avg">
+                            <i class="fa fa-star"></i> {{ recipe.ratingAvg }} <span class="rating-count">({{ recipe.ratingCount }})</span>
+                        </p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row recipeStats">
+                    <div class="col">
+                        <p class="recipeCaloriesIcon"><i class="fa fa-person-running"></i></p>
+                        <p class="recipeCalories text-muted">{{recipe.nutrition[0].calories}}<span> kcal</span></p>
+                    </div>
+                    <div class="col">
+                        <p class="recipeTimeIcon"><i class="fa-regular fa-clock"></i></p>
+                        <p class="recipeTime text-muted">{{recipe.totalTime}} </p>
+                    </div>
+                    <div class="col">
+                        <p class="recipeIngredientsCount">{{ recipe.ingredients|length }}</p>
+                        <p class="recipeIngredients text-muted">Ingredients</p>
+                    </div>
+                </div>    
+                
+                <hr>
+
+                <div class="row description">
+                    <p class="recipeDescription">{{recipe.description}}</p>
+                </div>
+                
+                <hr>
+
+                <div class="row servings">
+                    <div class="col" id="minusServingsButton">
+                        <i class="fa fa-minus"></i>
+                    </div>
+                    <div class="col">
+                        <span class="servingsCount" id="servingsCount">{{recipe.servings}}</span> <span class="servingsText text-muted">Servings</span>
+                    </div>
+                    <div class="col" id="addServingsButton">
+                        <i class="fa fa-plus"></i>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row recipeIngredients">
+                    <div class="row recipeIngredientsTitleContainer">
+                        <h3 class="col recipeIngredientsTitle">Ingredients</h3>
+                        <a class="col addToShoppingList" href="/addToShoppingList/{{ingredientIDs}}">Add to Shopping List</a>
+                    </div>
+                    
+                    {% for ingredient in recipe.ingredients %}
+                        <p class="col-12">- <span class="ingredient-amount">{{ ingredient.amount }}</span> {{ ingredient.unit }} {{ ingredient.name }}</p>
+                    {% endfor %}
+                </div>
+
+                <hr>    
+
+                <div class="row directions">
+                    <h3 class="recipeDirectionsTitle">Directions</h3>
+                    <div class="col-12">
+                        {{ recipe.instructions }}
+                        
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row nutrition">
+                    <h3 class="recipeNutritionTitle">Nutritional Information</h3>
+                    <div class="col-12">
+                        <table class="table nutritionTable">
+                            <tbody>
+                                <tr>
+                                    <td class="nutritionalName">Calories</td>
+                                    <td class="nutritionalValue">{{ recipe.nutrition[0].calories }} kcal</td>
+                                </tr>
+                                <tr>
+                                    <td class="nutritionalName">Carbohydrate</td>
+                                    <td class="nutritionalValue">{{ recipe.nutrition[0].carbohydrate }} g</td>
+                                </tr>
+                                <tr>
+                                    <td class="nutritionalName">Cholesterol</td>
+                                    <td class="nutritionalValue">{{ recipe.nutrition[0].cholesterol }} g</td>
+                                </tr>
+                                <tr>
+                                    <td class="nutritionalName">Fat</td>
+                                    <td class="nutritionalValue">{{ recipe.nutrition[0].fat }} g</td>
+                                </tr>
+                                <tr>
+                                    <td class="nutritionalName">Saturated Fat</td>
+                                    <td class="nutritionalValue">{{ recipe.nutrition[0].saturatedFat }} g</td>
+                                </tr>
+                                <tr>
+                                    <td class="nutritionalName">Unsaturated Fat</td>
+                                    <td class="nutritionalValue">{{ recipe.nutrition[0].unsaturatedFat }} g</td>
+                                </tr>
+                                <tr>
+                                    <td class="nutritionalName">Fiber</td>
+                                    <td class="nutritionalValue">{{ recipe.nutrition[0].fiber }} g</td>
+                                </tr>
+                                <tr>
+                                    <td class="nutritionalName">Protein</td>
+                                    <td class="nutritionalValue">{{ recipe.nutrition[0].protein }} g</td>
+                                </tr>
+                                <tr>
+                                    <td class="nutritionalName">Sodium</td>
+                                    <td class="nutritionalValue">{{ recipe.nutrition[0].sodium }} mg</td>
+                                </tr>
+                                <tr>
+                                    <td class="nutritionalName">Sugar</td>
+                                    <td class="nutritionalValue">{{ recipe.nutrition[0].sugar }} g</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row reviews">
+                    <div class="row recipeReviewsTitleContainer">
+                        <h3 class="col recipeReviewsTitle">Reviews</h3>
+                        <a class="col reviewRating"><i class="fa-regular fa-star"></i> {{ recipe.ratingAvg }} ({{ recipe.ratingCount }})</a>
+                    </div>
+                    <div class="reviewContainer">
+                        {% for review in reviews[:5] %}
+                            <div class="row review">
+                                <div class="col-6">
+                                    <span class="reviewAuthor">{{ review.author }}</span>
+                                </div>
+                                <div class="col-6 reviewStarsContainer">
+                                    <span class="reviewStars" data-rating={{ review.rating }} data-num-stars="5"></span>
+                                </div>
+                                <div class="col-12">
+                                    <span class="reviewBody">{{ review.body }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% include ['footer.html'] %}
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/recipe.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/rating.js') }}"></script>
+        <script>
+            $(function(){
+                $('.reviewStars').stars();
+            });
+        </script>
+
+    </body>
+</html>

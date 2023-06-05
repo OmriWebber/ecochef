@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, redirect, jsonify, Markup, url_for, flash, session
+from flask import Flask, render_template, request, redirect, jsonify, Markup, url_for, flash, session, Blueprint
 from flask_login import LoginManager, login_required, current_user
+from flask_paginate import Pagination, get_page_parameter
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from flask_ckeditor import CKEditor
@@ -9,6 +10,7 @@ from models import *
 from quicktype.recipeType import recipe_from_dict, recipe_to_dict
 from ingredient_parser import parse_ingredient
 from config import Config
+import random
 
 application = Flask(__name__)
 application.config.from_object(Config)
@@ -53,10 +55,70 @@ def index():
     print(recipes)
     return render_template("index.html", name="Ecochef", user=current_user)
     
+    
+@application.route("/search", methods=["POST", "GET"])
+def search():
+    url = Config.API_URL + '/recipes'
+    response = requests.get(url)
+    if response.status_code == 404:
+        recipes = "No Recipes Found"
+        flash("No Recipes Found", 404)
+    elif response.status_code == 100:
+        recipes = "Incorrect Query"
+        flash("Incorrect Query", 100)
+    else:
+        recipes = response.json()
+        return render_template("search.html", recipes=recipes, name="Ecochef", user=current_user)
+    print(recipes)
+    return render_template("search.html", name="Ecochef", user=current_user)
 
 
+@application.route("/recipe/<id>", methods=["GET"])
+def recipe(id):
+    url = Config.API_URL + '/recipe/' + id
+    response = requests.get(url)
+    if response.status_code == 404:
+        recipe = "No Recipes Found"
+        flash("No Recipes Found", 404)
+    elif response.status_code == 100:
+        recipe = "Incorrect Query"
+        flash("Incorrect Query", 100)
+    else:
+        recipe = response.json()
+        
+        ingredientIDs = []
+        for ingredient in recipe['ingredients']:
+            ingredientIDs.append(ingredient['id'])
+        
+        recipeReviews = recipe['reviews']
+        reviews = random.choices(recipeReviews, k=5)
+        
+        return render_template("recipe.html", recipe=recipe, ingredients=ingredientIDs, reviews=reviews, name="Ecochef", user=current_user)
+    print(recipe)
+    return render_template("recipe.html", name="Ecochef", user=current_user)
+
+@application.route("/favourites")
+@login_required
+def favourites():
+    savedRecipes = current_user.savedRecipes
+    print(savedRecipes)
+    return render_template('savedRecipes.html', recipes=savedRecipes, user=current_user, name="Ecochef")
 
 
+@application.route("/saveRecipe/<id>")
+@login_required
+def saveRecipe(id):
+    user = Users.query.filter_by(id=current_user.id).first()
+    saveRecipe = savedUserRecipes(userID=user.id, RecipeID=id)
+    checkIfExists = savedUserRecipes.query.filter_by(userID=user.id, RecipeID=saveRecipe.RecipeID).first()
+    if checkIfExists:
+        flash('Recipe Already Saved')
+        print(checkIfExists)
+    else:
+        user.savedRecipes.append(saveRecipe)
+        db.session.commit()
+        flash('Recipe Saved')
+    return redirect(url_for('showRecipe', id=id))
 
 
 
@@ -157,7 +219,7 @@ def profile():
     token = util.get_token(current_user)
     payload = {}
     headers = {
-    'x-access-token': token,
+    'x-access-token': token
     }
 
     response = requests.request("GET", url, headers=headers, data=payload)
