@@ -17,40 +17,10 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <center>
-                        <h3 class="profile-savedRecipeTitle">Saved Recipes</h3>
-                        <div class="profile-savedRecipes">
-                            {% for recipe in user_recipes %}
-                                {% if loop.index > 5 %}
 
-                                {% else %}
-                                    <div class="row profile-savedRecipe">
-                                        <a class="col-1" href="{{ url_for('unsaveRecipe', id=recipe.id) }}">
-                                            <i class="deleteSavedRecipe fa fa-times"></i>
-                                        </a>
-                                        <p class="col-7 recipeTitle">{{recipe.title}}</p>
-                                        <a class="col-4 btn btn-light float-right" href="{{ url_for('showRecipe', id=recipe.id) }}">View Recipe</a>
-                                    </div>
-                                {% endif %}
-                                
-                            {% endfor %}
-                            <a class="profile-viewAllSavedRecipes btn btn-light" href="{{ url_for('savedRecipes') }}">View all saved recipes</a>
-
-
-                        </div>
-                    </center>
                 </div>
                 <div class="col-6">
-                    <center>
-                        <h3 class="profile-shoppingListTitle">Shopping List</h3>
-                        <div class="profile-shoppingList">
-                            {% for ingredient in shopping_list %}
-                                <p class="shoppingListIngredient">-  {{ ingredient }}</p>
-                            {% endfor %}
-                        </div>
-                        <a class="profile-viewShoppingList btn btn-light" href="{{ url_for('showShoppingList') }}">View Shopping List</a>
 
-                    </center>
                 </div>
             </div>
             

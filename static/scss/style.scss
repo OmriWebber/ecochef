@@ -13,6 +13,8 @@ $backgroundColor: #ffffff;
 @import 'recipeGrid';
 @import 'search';
 @import 'recipe';
+@import 'results';
+@import 'alert';
 
 @font-face {
     font-family: AfterNight;
@@ -130,7 +132,8 @@ $backgroundColor: #ffffff;
   }
   
   .alert {
-    margin-bottom: 0px;
+    margin-bottom: -30px;
+    z-index: 999;
     animation: 1s ease 0s 1 slideInFromLeft;
   }
   

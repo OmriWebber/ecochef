@@ -11,9 +11,9 @@
       </button>
 
       <a class="navbar-brand" href="{{ url_for('index') }}">{{name}}</a>
-      {% if current_user.is_authenticated %}
+      {% if session['user'] %}
         <div class="nav-icons">
-          <a class="nav-icon" href="{{ url_for('savedRecipes') }}"><i class="fa fa-shake fa-regular fa-heart"></i></a>
+          <a class="nav-icon" href="{{ url_for('favourites') }}"><i class="fa fa-shake fa-regular fa-heart"></i></a>
           <a class="nav-icon" href="{{ url_for('search') }}"><i class="fa fa-search"></i></a>
         </div>
       {% else %}
@@ -22,7 +22,7 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav ms-auto">
           
-          {% if current_user.is_authenticated %}
+          {% if session['user'] %}
             <a class="nav-link" href="{{ url_for('index') }}">Home</a>
             <a class="nav-link" href="{{ url_for('index') }}">Recipes</a>
             <a class="nav-link" href="{{ url_for('favourites') }}">Favourites</a>
@@ -30,7 +30,7 @@
             <a class="nav-link" href="{{ url_for('index') }}">Shopping List</a>
             <a class="nav-link" href="{{ url_for('createRecipe') }}">Create a Recipe</a>
             <span class="spacer"></span>
-            <a class="nav-link user-name" href="{{ url_for('profile') }}"><span class="user-container"><span class="user-bg"><p class="user-letter"></p></span></span> {{ user.username }}</a>
+            <a class="nav-link user-name" href="{{ url_for('profile') }}"><span class="user-container"><span class="user-bg"><p class="user-letter"></p></span></span> {{ session['user'].username }}</a>
             <a class="nav-link logout" href="{{ url_for('auth.logout') }}">Logout</a>
           {% else %}
           <a class="nav-link" href="{{ url_for('index') }}">Home</a>

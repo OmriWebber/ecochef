@@ -28,7 +28,6 @@ $(".add-ingredient").click(function () {
                             "</div>";
 
         $('.remove-ingredient').click(function(){
-            console.log("test");
             $(this).parent().remove();
         });
 
@@ -36,7 +35,63 @@ $(".add-ingredient").click(function () {
     })
 
 $(document).on("click", ".remove-ingredient", function () {
-    console.log("test");
     $(this).parent().remove();
 });
 
+let timeoutID = null;
+
+function findRecipe(str) {
+    var settings = {
+        "url": "http://127.0.0.1:4000/search",
+        "method": "POST",
+        "timeout": 0,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "data": JSON.stringify({
+            "query": str
+        }),
+    };
+    
+    $.ajax(settings).done(function (response) {
+        var results = response.results;
+        var div = $(".search-results");
+        div.empty();
+        for (var i = 0; i < results.length; i++) {
+            console.log(results[i]);
+            if (i % 2 == 0) {
+                console.log("row open");
+                div.append("<div class='row'>");
+                div = $(".search-results .row:last-child")
+            }
+
+            
+            console.log("result");
+            div.append("<div class='col recipe'>"+
+                                            "<a href='recipe/" + results[i].id + "'>" +
+                                                "<img class='recipe-image' src='" + results[i].imageURL + "'>" +
+                                                "<div class='favorite-overlay'>" +
+                                                    "<a class='heart'>" +
+                                                        "<i class='fa fa-heart'></i>" +
+                                                    "</a>" +
+                                                "</div>" +
+                                                "<div class='overlay'>" +
+                                                    "<p class='recipe-title'>" + results[i].title + "</p>" +
+                                                "</div>" +
+                                            "</a>" +
+                                        "</div>")
+
+            if (i % 2 == 1) {
+                console.log("row close");
+                div.append("</div>")
+                div = $(".search-results")
+            }
+        }
+    });
+}
+
+$('#searchInput').keyup(function(e) {
+  clearTimeout(timeoutID);
+  const value = e.target.value
+  timeoutID = setTimeout(() => findRecipe(value), 500)
+});
