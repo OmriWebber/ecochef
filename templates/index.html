@@ -16,7 +16,11 @@
                 {% for recipe in recipes.recipes[:5] | sort(attribute='ratingAvg') %}
                     {% if recipe.ratingAvg %}
                         <div class="swiper-slide">
-                            <img class="featured-image" src={{ recipe.imageURL }} style="width:100%">
+                            {% if recipe.imageURL == "default.jpg" %}
+                                <img class="featured-image" src={{ url_for('static', filename='img/default.jpg') }} style="width:100%">
+                            {% else %}
+                                <img class="featured-image" src={{ recipe.imageURL }} style="width:100%">
+                            {% endif %}
                             <div class="overlay">
                                 <div class="row">
                                     <div class="col">
@@ -72,10 +76,27 @@
 
                             <div class="col recipe">
                                 <a href="recipe/{{recipe.id}}">
-                                    <img class="recipe-image" src={{ recipe.imageURL }}>
+                                    {% if recipe.imageURL == "default.jpg" %}
+                                        <img class="recipe-image" src={{ url_for('static', filename='img/default.jpg') }}>
+                                    {% else %}
+                                        <img class="recipe-image" src={{ recipe.imageURL }}>
+                                    {% endif %}
                                     <div class="favorite-overlay">
+                                        {% set liked = false %}
+                                        {% for like in recipes.likes %}
+                                            {% if like.user_id == user.id %}
+                                                {% set liked = true %}
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if liked %}
+                                            {% set icon_class = "fa fa-heart" %}
+                                        {% else %}
+                                            {% set icon_class = "far fa-heart" %}
+                                        {% endif %}
+
                                         <a class="heart">
-                                            <i class="fa fa-heart"></i>
+                                            <i class="{{ icon_class }}"></i>
                                         </a>
                                     </div>
                                     <div class="overlay">
