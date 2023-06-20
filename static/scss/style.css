@@ -460,6 +460,14 @@
   text-align: center;
   font-size: 36px;
   font-weight: 400;
+  color: #151515;
+}
+.search-container .title-col {
+  background-size: cover;
+  background-position: center;
+  padding: 10px;
+  margin-top: -10px;
+  color: white;
 }
 
 .recipe-container .recipeImage {
