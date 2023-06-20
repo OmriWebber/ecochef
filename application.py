@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, jsonify, Markup, url_for, flash, session, Blueprint
 from flask_login import LoginManager, login_required, current_user
-from flask_paginate import Pagination, get_page_parameter
 from werkzeug.utils import secure_filename
 from flask_ckeditor import CKEditor
 from flask_cdn import CDN
@@ -8,29 +7,16 @@ from functools import wraps
 import os, json, pymysql, chardet, util, requests
 from ingredient_parser import parse_ingredient
 from config import Config
-from models import *
 import random, jwt
 
 application = Flask(__name__)
 application.config.from_object(Config)
-
-db.init_app(application)
-migrate.init_app(application, db)
 
 # If application detects rds database, use cloud database, if not use localhost
 if 'RDS_HOSTNAME' in os.environ:
     CDN(application)
     
 ckeditor = CKEditor(application)
-
-# Init Login Manager
-login_manager = LoginManager()
-login_manager.login_view = 'auth.login'
-login_manager.init_app(application)
-
-@login_manager.user_loader
-def load_user(id):
-    return User(id)
 
 # blueprint for auth routes in our application
 from auth import auth as auth_blueprint
@@ -105,18 +91,30 @@ def recipe(id):
 
 @application.route("/favourites")
 def favourites():
-    savedRecipes = current_user.savedRecipes
-    print(savedRecipes)
-    return render_template('savedRecipes.html', recipes=savedRecipes, user=current_user, name="Ecochef")
+    url = Config.API_URL + '/user/favourites'
+    headers = {
+        'x-access-token': session['user']['token']
+    }
+    
+    response = requests.get(url, headers=headers)
+    print(response.json())
+    favourites = response.json()
+    return render_template('savedRecipes.html', recipes=favourites, user=current_user, name="Ecochef")
 
 
-@application.route('/like/<int:post_id>/<action>')
+@application.route('/like/<int:recipe_id>/<action>')
 def saveRecipe(recipe_id, action):
-    print(recipe)
+    print(recipe_id, action)
     if action == 'save':
-        current_user.save_recipe(recipe)
+        url = Config.API_URL + '/saverecipe/' + recipe_id
     if action == 'unsave':
-        current_user.unsave_recipe(recipe)
+        url = Config.API_URL + '/unsaverecipe/' + recipe_id
+
+    headers = {
+        'x-access-token': session['user']['token']
+    }
+    response = requests.post(url, headers=headers)
+
     return redirect(request.referrer)
 
 
@@ -145,7 +143,7 @@ def profile():
 @application.route("/createRecipe", methods=["POST", "GET"])
 @login_required
 def createRecipe():
-    url = Config.API_URL + '/recipe'
+    url = Config.API_URL + '/createrecipe'
     
     if request.method == "POST":
         # store values recieved from HTML form in local variables
@@ -156,7 +154,7 @@ def createRecipe():
         prepTime=request.form.get("prepTime")
         cookTime=request.form.get("cookTime")
         count=request.form.get("count")
-        imageURLforDB='img/recipeImages/default.jpg'
+        imageURLforDB='img/default.jpg'
         
         # Image Handling
         if 'recipeImage' not in request.files:
@@ -208,7 +206,7 @@ def editRecipe(id):
     url = Config.API_URL + '/recipe/' + id
     response = requests.get(url)
     if response.status_code == 404:
-        recipe = "No Recipes Found"
+        recipe = "No Recipe Found"
         flash("No Recipes Found", 404)
     elif response.status_code == 100:
         recipe = "Incorrect Query"
@@ -253,8 +251,7 @@ def editRecipe(id):
                         print('Ingredient Already Exists')
                 else:
                     recipe.ingredients.append(ingredient)
-
-            db.session.commit()
+                    
             flash('Recipe Edited.')
             return redirect(url_for('showRecipe', id=id))
     return render_template('editRecipe.html', recipe=recipe, user=current_user, name="Ecochef")
@@ -283,8 +280,6 @@ def addToShoppingList(ingredientIDs):
             shoppingListItem = shoppingList(ingredient=ingredient.name)
             user.shoppingList.append(shoppingListItem)
     
-    flash('Ingredients added to shopping list')
-    db.session.commit()
     return redirect(url_for('showShoppingList'))
 
 
@@ -306,7 +301,7 @@ if __name__ == "__main__":
     # Setting debug to True enables debug output. This line should be
     # removed before deploying a production app.
     application.debug = True
-    application.run()
+    application.run(port=5000)
     
 
 

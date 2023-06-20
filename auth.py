@@ -1,11 +1,8 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-from werkzeug.security import check_password_hash, generate_password_hash
-from flask_login import login_user, login_required, logout_user, current_user
 from config import Config
 import requests, json
-from models import User, db
 from requests.auth import HTTPBasicAuth
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
@@ -15,7 +12,6 @@ auth = Blueprint('auth', __name__, url_prefix='/auth')
 def register():
     url = Config.API_URL + '/createuser'
     if request.method == 'POST':
-        logout_user()
         
         payload = json.dumps({
             "email": request.form['email'],
