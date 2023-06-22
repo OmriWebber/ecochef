@@ -35,13 +35,26 @@ def index():
         flash("Incorrect Query", 100)
     else:
         recipes = response.json()
-        return render_template("index.html", recipes=recipes, name="Ecochef")
-    return render_template("index.html", recipes=recipes, name="Ecochef")
+        userURL = Config.API_URL + '/currentuser'
+        headers = {
+            'x-access-token': session['user']['token']
+        }
+        user = requests.get(userURL, headers=headers)
+        JsonUser = user.json()['user']
+        LikesList = []
+        for likes in JsonUser['likes']:
+            LikesList.append(likes)
+        print("LIKES: ",  LikesList)
+        return render_template("index.html", recipes=recipes, likes=LikesList, name="Ecochef")
+    
+    
+    
+    return render_template("index.html", recipes=recipes, likes=LikesList, name="Ecochef")
     
     
 @application.route("/search", methods=["POST", "GET"])
 def search():
-    return render_template("search.html", name="Ecochef", user=current_user)
+    return render_template("search.html", name="Ecochef")
     
 
 @application.route("/searchByIngredient", methods=["POST"])
@@ -61,8 +74,8 @@ def searchByIngredients():
         recipes = response.json()
         msg = "Found " + str(len(recipes)) + " recipes"
         flash(msg , 200)
-        return render_template("results.html", recipes=recipes, name="Ecochef", user=current_user)
-    return render_template("search.html", name="Ecochef", results=results, user=current_user)
+        return render_template("results.html", recipes=recipes, name="Ecochef")
+    return render_template("search.html", name="Ecochef", results=results)
 
 
 @application.route("/recipe/<id>", methods=["GET"])
@@ -85,9 +98,9 @@ def recipe(id):
         recipeReviews = recipe['reviews']
         reviews = random.choices(recipeReviews, k=5)
         
-        return render_template("recipe.html", recipe=recipe, ingredients=ingredientIDs, reviews=reviews, name="Ecochef", user=current_user)
+        return render_template("recipe.html", recipe=recipe, ingredients=ingredientIDs, reviews=reviews, name="Ecochef")
     print(recipe)
-    return render_template("recipe.html", name="Ecochef", user=current_user)
+    return render_template("recipe.html", name="Ecochef")
 
 @application.route("/favourites")
 def favourites():
@@ -97,18 +110,35 @@ def favourites():
     }
     
     response = requests.get(url, headers=headers)
-    print(response.json())
     favourites = response.json()
-    return render_template('savedRecipes.html', recipes=favourites, user=current_user, name="Ecochef")
+    
+    userURL = Config.API_URL + '/currentuser'
+    user = requests.get(userURL, headers=headers)
+    JsonUser = user.json()['user']
+    LikesList = []
+    for likes in JsonUser['likes']:
+        LikesList.append(likes)
+    return render_template('savedRecipes.html', recipes=favourites, likes=LikesList, name="Ecochef")
 
 
-@application.route('/like/<int:recipe_id>/<action>')
-def saveRecipe(recipe_id, action):
-    print(recipe_id, action)
-    if action == 'save':
-        url = Config.API_URL + '/saverecipe/' + recipe_id
-    if action == 'unsave':
-        url = Config.API_URL + '/unsaverecipe/' + recipe_id
+@application.route('/saveRecipe/<int:recipe_id>', methods=["POST", "GET"])
+def saveRecipe(recipe_id):
+    print(recipe_id)
+
+    url = Config.API_URL + '/saverecipe/' + str(recipe_id)
+
+    headers = {
+        'x-access-token': session['user']['token']
+    }
+    response = requests.post(url, headers=headers)
+
+    return redirect(request.referrer)
+
+
+@application.route('/unsaveRecipe/<int:recipe_id>', methods=["POST", "GET"])
+def unsaveRecipe(recipe_id):
+
+    url = Config.API_URL + '/unsaverecipe/' + str(recipe_id)
 
     headers = {
         'x-access-token': session['user']['token']
@@ -141,7 +171,6 @@ def profile():
 
 
 @application.route("/createRecipe", methods=["POST", "GET"])
-@login_required
 def createRecipe():
     url = Config.API_URL + '/createrecipe'
     
@@ -186,7 +215,7 @@ def createRecipe():
 
         payload = json.dumps(recipe.format())
         headers = {
-        'x-access-token': current_user.token,
+        'x-access-token': session['user'].token,
         'Content-Type': 'application/json'
         }
 
@@ -196,12 +225,11 @@ def createRecipe():
         # Adding and commiting new recipe to database
         flash('Recipe Created.', 200)
         return redirect(url_for('index'))
-    return render_template("createRecipe.html", name="Ecochef", user=current_user)
+    return render_template("createRecipe.html", name="Ecochef")
 
 
 
 @application.route("/editRecipe/<id>", methods=["POST", "GET"])
-@login_required
 def editRecipe(id):
     url = Config.API_URL + '/recipe/' + id
     response = requests.get(url)
@@ -254,11 +282,10 @@ def editRecipe(id):
                     
             flash('Recipe Edited.')
             return redirect(url_for('showRecipe', id=id))
-    return render_template('editRecipe.html', recipe=recipe, user=current_user, name="Ecochef")
+    return render_template('editRecipe.html', recipe=recipe, name="Ecochef")
 
 
 @application.route("/addToShoppingList/<ingredientIDs>")
-@login_required
 def addToShoppingList(ingredientIDs):
     user = current_user
     
@@ -284,15 +311,13 @@ def addToShoppingList(ingredientIDs):
 
 
 @application.route("/removeFromShoppingList/<id>")
-@login_required
 def removeFromShoppingList(id):
     return redirect(url_for('showShoppingList'))
 
 
 @application.route("/shoppingList")
-@login_required
 def showShoppingList():
-    shoppingList = current_user.shoppingList
+    shoppingList = session['user'].shoppingList
     print(shoppingList)
     return render_template('shoppingList.html', user=current_user, shoppingList=shoppingList, name="Ecochef")
 

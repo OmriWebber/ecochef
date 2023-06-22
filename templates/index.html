@@ -69,7 +69,7 @@
                 </div>
             </div>
             <div class="recipeGrid">
-                {% for recipe in recipes.recipes | sort(attribute='ratingAvg') %}
+                {% for recipe in recipes.recipes %}
                     {% if loop.index % 2 == 1 %}
                         <div class="row">
                     {% endif %}
@@ -82,22 +82,21 @@
                                         <img class="recipe-image" src={{ recipe.imageURL }}>
                                     {% endif %}
                                     <div class="favorite-overlay">
-                                        {% set liked = false %}
-                                        {% for like in recipes.likes %}
-                                            {% if like.user_id == user.id %}
-                                                {% set liked = true %}
+                                        {% set ns = namespace(liked=false) %}
+                                        {% for like in likes %}
+                                            {% if like.recipe_id == recipe.id %}
+                                                {% set ns.liked = true %}                     
                                             {% endif %}
-                                        {% endfor %}
-
-                                        {% if liked %}
-                                            {% set icon_class = "fa fa-heart" %}
+                                        {% endfor %}        
+                                        {% if ns.liked %}
+                                            <a href="unsaveRecipe/{{recipe.id}}" class="heart">
+                                                <i class="fa fa-heart"></i>
+                                            </a>                                        
                                         {% else %}
-                                            {% set icon_class = "far fa-heart" %}
+                                            <a href="saveRecipe/{{recipe.id}}" class="heart">
+                                                <i class="far fa-heart"></i>
+                                            </a>
                                         {% endif %}
-
-                                        <a class="heart">
-                                            <i class="{{ icon_class }}"></i>
-                                        </a>
                                     </div>
                                     <div class="overlay">
                                         <p class="recipe-title">{{ recipe.title }}</p>
