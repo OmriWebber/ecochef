@@ -35,17 +35,19 @@ def index():
         flash("Incorrect Query", 100)
     else:
         recipes = response.json()
-        userURL = Config.API_URL + '/currentuser'
-        headers = {
-            'x-access-token': session['user']['token']
-        }
-        user = requests.get(userURL, headers=headers)
-        JsonUser = user.json()['user']
-        LikesList = []
-        for likes in JsonUser['likes']:
-            LikesList.append(likes)
-        print("LIKES: ",  LikesList)
-        return render_template("index.html", recipes=recipes, likes=LikesList, name="Ecochef")
+        if session.get('user') is not None:
+            userURL = Config.API_URL + '/currentuser'
+            headers = {
+                'x-access-token': session['user']['token']
+            }
+            user = requests.get(userURL, headers=headers)
+            JsonUser = user.json()['user']
+            LikesList = []
+            for likes in JsonUser['likes']:
+                LikesList.append(likes)
+            print("LIKES: ",  LikesList)
+            return render_template("index.html", recipes=recipes, likes=LikesList, name="Ecochef")
+        return render_template("index.html", recipes=recipes, name="Ecochef")
     
     
     
