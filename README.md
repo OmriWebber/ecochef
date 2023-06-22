@@ -33,44 +33,10 @@ I also used font-awesome icons to style buttons and other features -  [Font Awes
 -   Working mum with kids
 -   Anyone else who is interested in reducing food waste through efficient use of ingredients.
 
-**Garret's 5 Planes of UX design are as follows:-**
-
-### **Strategy (The goal)**
+### **The Strategy**
 
 The strategy is concerned with the goal of the project, which was to create a user-friendly, interactive recipe website with an easy-to-use search recipes function. As a user, I wish to interact with the recipe website, by being able to log in, logout, create, delete, update, favourite and search for recipes.  
 CRUD functions are demonstratable throughout the project.
-
-### **Scope (What tasks can be done)**
-
-The tasks that can be accomplished on Ecochef involve all CRUD functions - therefore the user will be able to interact by viewing, adding, editing and deleting recipes. Users must login using their 'username' or register, if they haven't already done so. The website uses Flask to redirect to appropriate urls, so that users will know where to go. The user should have a good and smooth experience of using the website. CRUD is an acrynom standing for (create, read, update and delete) -  [What is CRUD?](https://www.codecademy.com/articles/what-is-crud).
-
-CRUD functions are detailed further in the  **Testing**  section showing screenshots of 'flash' messages on successfully implementing CRUD functions, for example, whenever a user adds a recipe or logout. Flash messages also show errors (ie) if users input incorrect password or if username was incorrect.
-
-### **Structure (Plan or Flow of Interactions)**
-
-This is the plan or flow of interactions users will take to navigate and understand DumpDinners website. I considered my database structure and detail below the structure of tables used for the DumpDinners website. Mainly just 2 tables were used (register and recipes). There was a 3rd table for categories, but due to having experienced issues with updating categories using materialise select dropdown menu, I changed this field to an input field. I therefore no longer required the categories table and deleted it. Within each table is a collection and within each collection a document. I used mLab to create my database from the backend.
-
-[MongoDB Schemata showing collections and user (register) collection](https://github.com/Deirdre18/dumpdinners-recipe-app/blob/master/Mock-ups/Mock-up%20DumpDinners-MongoDB%20Tables%20Schema%20and%20Register%20collection.pdf)
-
-[MongoDB showing collection for Recipe](https://github.com/Deirdre18/dumpdinners-recipe-app/blob/master/Mock-ups/Mock-up%20DumpDinners%20-%20MongoDB%20Recipe%20collection.pdf)
-
-### [](https://github.com/Deirdre18/dumpdinners-recipe-app#skeleton)**Skeleton**
-
-In this section, I tried to place the elements in appropriate places, and in a logical order – such as navbar, then heading, then brief explanation of the project using unordered listing. I used Baslamic to create wireframes. I visualised in my mind and sketched the layout, and instead of using the sketch tools (and also due to time limitations) which Baslamic provides, I created blobs using Baslamiq with screenshots of different views on website, giving explanation for each.
-
-I took screenshots of the various views for user logged in, add recipe, edit recipe, recipe, login, register and home/index -  [Wireframes/Mock-up Blobs using screenshots and Baslamiq](https://github.com/Deirdre18/dumpdinners-recipe-app/blob/master/Mock-ups/Mock-ups%20DumpDinners.pdf)
-
-I also tested the search button for recipes, which users can search by inputting Recipe Name, Username, Category. Ingredients or Calories. The results are as follows and when the user clicks on 'More', they're shown the recipe page -  [SEARCH FEATURE](https://github.com/Deirdre18/dumpdinners-recipe-app/blob/master/Mock-ups/Mock-ups%20DumpDinners-Search%20button.pdf)
-
-### [](https://github.com/Deirdre18/dumpdinners-recipe-app#surface)**Surface**
-
-[https://www.shutterstock.com/](https://www.shutterstock.com/)
-
-The surface, or the skin – is the interface for which visitors will engage with the dashboard. I kept the color scheme congruent, using complimentary colors such as blue and organge through the various website views, and used an orange gradient scheme throughout to add color to all areas of the website to enhance the look and feel of the website. I referred to this article -  [CSS Background Gradient](https://www.quackit.com/css/codes/patterns/css_background_stripes.cfm)
-
-I used a pencil art image for my main background image on the Home/Index page, referring to this article -  [Pencil Art Theme](https://www.shutterstock.com/search/pencil+drawing)
-
-All typography was in English but as Google has a translator, can be easily translated. I particularly choose a congruent colour scheme (purple for navbar and footer and lighter shades for body and drop down menus in the dashboard), which I felt gave an appropriate overall appearance.
 
 ### **Flask**
 
