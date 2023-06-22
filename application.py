@@ -35,6 +35,11 @@ def index():
         flash("Incorrect Query", 100)
     else:
         recipes = response.json()
+        categories = []
+        for recipe in recipes['recipes']:
+            if recipe['category'] not in categories:
+                categories.append(recipe['category'])
+        print(categories)
         if session.get('user') is not None:
             userURL = Config.API_URL + '/currentuser'
             headers = {

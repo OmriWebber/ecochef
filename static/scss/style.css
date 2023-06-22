@@ -378,6 +378,12 @@
   margin-top: 10px;
 }
 
+.recipeGrid {
+  margin: 0px;
+}
+.recipeGrid .row {
+  margin: 0px;
+}
 .recipeGrid .recipe {
   padding: 10px;
   overflow: hidden;
@@ -599,6 +605,10 @@
 
 .alert {
   margin-bottom: -80px;
+}
+
+.favourites .title {
+  padding: 40px 30px 20px 30px;
 }
 
 @font-face {
