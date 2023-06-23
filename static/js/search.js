@@ -42,7 +42,7 @@ let timeoutID = null;
 
 function findRecipe(str) {
     var settings = {
-        "url": "http://127.0.0.1:4000/search",
+        "url": "http://ecochef-api-env.ap-southeast-2.elasticbeanstalk.com/search",
         "method": "POST",
         "timeout": 0,
         "headers": {
@@ -58,23 +58,13 @@ function findRecipe(str) {
         var div = $(".search-results");
         div.empty();
         for (var i = 0; i < results.length; i++) {
-            console.log(results[i]);
             if (i % 2 == 0) {
-                console.log("row open");
                 div.append("<div class='row'>");
                 div = $(".search-results .row:last-child")
             }
-
-            
-            console.log("result");
             div.append("<div class='col recipe'>"+
                                             "<a href='recipe/" + results[i].id + "'>" +
                                                 "<img class='recipe-image' src='" + results[i].imageURL + "'>" +
-                                                "<div class='favorite-overlay'>" +
-                                                    "<a class='heart'>" +
-                                                        "<i class='fa fa-heart'></i>" +
-                                                    "</a>" +
-                                                "</div>" +
                                                 "<div class='overlay'>" +
                                                     "<p class='recipe-title'>" + results[i].title + "</p>" +
                                                 "</div>" +
@@ -82,7 +72,6 @@ function findRecipe(str) {
                                         "</div>")
 
             if (i % 2 == 1) {
-                console.log("row close");
                 div.append("</div>")
                 div = $(".search-results")
             }

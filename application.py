@@ -53,9 +53,6 @@ def index():
             print("LIKES: ",  LikesList)
             return render_template("index.html", recipes=recipes, likes=LikesList, name="Ecochef")
         return render_template("index.html", recipes=recipes, name="Ecochef")
-    
-    
-    
     return render_template("index.html", recipes=recipes, likes=LikesList, name="Ecochef")
     
     
@@ -128,31 +125,7 @@ def favourites():
     return render_template('savedRecipes.html', recipes=favourites, likes=LikesList, name="Ecochef")
 
 
-@application.route('/saveRecipe/<int:recipe_id>', methods=["POST", "GET"])
-def saveRecipe(recipe_id):
-    print(recipe_id)
 
-    url = Config.API_URL + '/saverecipe/' + str(recipe_id)
-
-    headers = {
-        'x-access-token': session['user']['token']
-    }
-    response = requests.post(url, headers=headers)
-
-    return redirect(request.referrer)
-
-
-@application.route('/unsaveRecipe/<int:recipe_id>', methods=["POST", "GET"])
-def unsaveRecipe(recipe_id):
-
-    url = Config.API_URL + '/unsaverecipe/' + str(recipe_id)
-
-    headers = {
-        'x-access-token': session['user']['token']
-    }
-    response = requests.post(url, headers=headers)
-
-    return redirect(request.referrer)
 
 
 @application.route("/profile")

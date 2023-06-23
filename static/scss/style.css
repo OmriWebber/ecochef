@@ -603,6 +603,10 @@
   text-align: center;
 }
 
+.search-results .recipe-title {
+  color: #151515;
+}
+
 .alert {
   margin-bottom: -80px;
 }

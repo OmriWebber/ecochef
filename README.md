@@ -9,19 +9,7 @@ The initial idea of creating the Ecochef website originated from looking at cook
 
 I wanted to show how food waste could be reduced if people have the tools to manage their ingredients more efficiently. With a large database of recipes, users should consistently find recipes that match their ingredient list and if not the the system gives the user the results with the highest amount of ingredients used.
 
-I used Bootstrap to handle the navbar, footer and grid system.  [Bootstrap](https://getbootstrap.com/). I used bootstraps grid system to define the layout of the page as well as cater for mobile/desktop responsiveness. An example of code for creating a 2-column grid is:-
-
-```
-	<div class="container"
-		<div class="row">
-			<div class="col">
-			</div>
-			<div class="col">
-			</div>
-		</div>
-	</div>
-
-```
+I used Bootstrap to handle the navbar, footer and grid system.  [Bootstrap](https://getbootstrap.com/). I used bootstraps grid system to define the layout of the page as well as cater for mobile/desktop responsiveness. 
 
 I also used font-awesome icons to style buttons and other features -  [Font Awesome](https://fontawesome.com/v4.7.0/).
 

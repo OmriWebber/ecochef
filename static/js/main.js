@@ -57,4 +57,56 @@ $(document).ready(function(){
 	});
 });
 
+$(".heart").click(function(){
+  var id = $(this).attr('data-id');
+  var action = $(this).attr('data-action');
+  var token = $(this).attr('data-token');
+  var icon = $(this).children();
+  var parent = $(this);
+
+  if(action == 'unsave') {
+    var settings = {
+      "url": "http://ecochef-api-env.ap-southeast-2.elasticbeanstalk.com/unsaverecipe/" + id,
+      "method": "POST",
+      "timeout": 0,
+      "headers": {
+        "x-access-token": token,
+        "Content-Type": "application/json"
+      },
+      "data": JSON.stringify({
+        "user_id": 1,
+        "recipe_id": id
+      }),
+    };
+    
+    $.ajax(settings).done(function (response) {
+      icon.removeClass('fa').addClass('far');
+      parent.attr('data-action', 'save');
+      console.log(response);
+    });
+  } else if (action == 'save') {
+    var settings = {
+      "url": "http://ecochef-api-env.ap-southeast-2.elasticbeanstalk.com/saverecipe/" + id,
+      "method": "POST",
+      "timeout": 0,
+      "headers": {
+        "x-access-token": token,
+        "Content-Type": "application/json"
+      },
+      "data": JSON.stringify({
+        "user_id": 1,
+        "recipe_id": id
+      }),
+    };
+    
+    $.ajax(settings).done(function (response) {
+      icon.removeClass('far').addClass('fa');
+      parent.attr('data-action', 'unsave');
+      console.log(response);
+    });
+  }
+  
+});
+
+
 
