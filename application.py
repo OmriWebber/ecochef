@@ -46,11 +46,14 @@ def index():
                 'x-access-token': session['user']['token']
             }
             user = requests.get(userURL, headers=headers)
+            if user.status_code == 401:
+                flash("Session Expired", 401)
+                return redirect(url_for('auth.logout'))
+            print(user.json())
             JsonUser = user.json()['user']
             LikesList = []
             for likes in JsonUser['likes']:
                 LikesList.append(likes)
-            print("LIKES: ",  LikesList)
             return render_template("index.html", recipes=recipes, likes=LikesList, name="Ecochef")
         return render_template("index.html", recipes=recipes, name="Ecochef")
     return render_template("index.html", recipes=recipes, likes=LikesList, name="Ecochef")
@@ -100,9 +103,23 @@ def recipe(id):
             ingredientIDs.append(ingredient['id'])
         
         recipeReviews = recipe['reviews']
-        reviews = random.choices(recipeReviews, k=5)
+        limit = 5
+        if len(recipeReviews) < limit:
+            limit = len(recipeReviews)
+        reviews = random.choices(recipeReviews, k=limit)
         
-        return render_template("recipe.html", recipe=recipe, ingredients=ingredientIDs, reviews=reviews, name="Ecochef")
+        if session.get('user') is not None:
+            userURL = Config.API_URL + '/currentuser'
+            headers = {
+                'x-access-token': session['user']['token']
+            }
+            user = requests.get(userURL, headers=headers)
+            JsonUser = user.json()['user']
+            LikesList = []
+            for likes in JsonUser['likes']:
+                LikesList.append(likes)
+        
+        return render_template("recipe.html", recipe=recipe, ingredients=ingredientIDs, likes=LikesList, reviews=reviews, name="Ecochef")
     print(recipe)
     return render_template("recipe.html", name="Ecochef")
 
