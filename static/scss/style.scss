@@ -16,6 +16,7 @@ $backgroundColor: #ffffff;
 @import 'results';
 @import 'alert';
 @import 'favourites';
+@import 'createRecipe';
 
 @font-face {
     font-family: AfterNight;
@@ -87,7 +88,7 @@ $backgroundColor: #ffffff;
   .ingredientItem input {
     border: none;
     padding: 10px;
-    width: 50% !important;
+    width: 89% !important;
   }
   
   #numOfIngredients {
@@ -133,9 +134,9 @@ $backgroundColor: #ffffff;
   }
   
   .alert {
-    margin-bottom: -30px;
+    margin-bottom: -60px;
     z-index: 999;
-    animation: 1s ease 0s 1 slideInFromLeft;
+    animation: 1s ease 0s 1 slideInFromTop;
   }
   
   #viewRecipe {
@@ -201,13 +202,13 @@ $backgroundColor: #ffffff;
     margin-top: 20px;
   }
   
-  @keyframes slideInFromLeft {
+  @keyframes slideInFromTop {
     0% {
-      transform: translateX(20%);
+      transform: translateY(-20%);
     }
   
     100% {
-      transform: translateX(0);
+      transform: translateY(0%);
     }
   }
   

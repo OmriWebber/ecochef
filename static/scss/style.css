@@ -161,6 +161,14 @@
   font-weight: 600;
 }
 
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
 .featured-container {
   padding: 0px;
 }
@@ -231,7 +239,7 @@
   float: right;
 }
 
-.btn-primary {
+.btn-primary, .btn-success {
   color: #fff;
   border-radius: 50px;
   padding: 8px 40px;
@@ -279,8 +287,23 @@
   border-radius: 0px 0px 10px 0px;
 }
 
+#recipeSubmitFormButton {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.deleteIngredientButton i {
+  margin-right: 0px;
+}
+
 .form-group {
   padding: 5px;
+}
+.form-group input {
+  width: 100%;
+}
+.form-group .recipeImageUpload {
+  width: 120%;
 }
 
 .form-input-title {
@@ -503,13 +526,13 @@
   font-weight: 400;
   margin-bottom: 0px;
 }
-.recipe-container .recipeDetails .recipeTitleContainer .saveRecipeButton {
+.recipe-container .recipeDetails .recipeTitleContainer .heart {
   margin-left: auto;
   margin-right: 0px;
   padding: 0px;
   border: none;
   background-color: transparent;
-  color: #151515;
+  color: #D92D34;
   font-size: 16px;
   font-weight: 400;
   cursor: pointer;
@@ -519,6 +542,9 @@
 }
 .recipe-container .recipeDetails .rating-avg p {
   margin-bottom: 0px;
+}
+.recipe-container .recipeDetails .rating-avg .fa-star {
+  color: #99C731;
 }
 .recipe-container .recipeDetails .recipeStats {
   text-align: center;
@@ -608,11 +634,32 @@
 }
 
 .alert {
+  margin-top: 96px;
   margin-bottom: -80px;
+  position: fixed;
+  width: 100%;
+}
+
+.alert-success {
+  background-color: #99C731;
+  border-color: #99C731;
+  border-radius: 0px 0px 10px 10px;
+  color: white;
+}
+
+.alert-danger {
+  background-color: #D92D34;
+  border-color: #D92D34;
+  border-radius: 0px 0px 10px 10px;
+  color: white;
 }
 
 .favourites .title {
   padding: 40px 30px 20px 30px;
+}
+
+.createRecipeTitle {
+  margin-top: 40px;
 }
 
 @font-face {
@@ -670,7 +717,7 @@ h1, h2 {
 .ingredientItem input {
   border: none;
   padding: 10px;
-  width: 50% !important;
+  width: 89% !important;
 }
 
 #numOfIngredients {
@@ -712,9 +759,9 @@ h1, h2 {
 }
 
 .alert {
-  margin-bottom: -30px;
+  margin-bottom: -60px;
   z-index: 999;
-  animation: 1s ease 0s 1 slideInFromLeft;
+  animation: 1s ease 0s 1 slideInFromTop;
 }
 
 #viewRecipe {
@@ -776,12 +823,12 @@ h1, h2 {
   margin-top: 20px;
 }
 
-@keyframes slideInFromLeft {
+@keyframes slideInFromTop {
   0% {
-    transform: translateX(20%);
+    transform: translateY(-20%);
   }
   100% {
-    transform: translateX(0);
+    transform: translateY(0%);
   }
 }
 .userContainer {

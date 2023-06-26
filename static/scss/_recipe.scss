@@ -30,13 +30,13 @@
                 margin-bottom: 0px;
             }
 
-            .saveRecipeButton {
+            .heart {
                 margin-left: auto;
                 margin-right: 0px;
                 padding: 0px;
                 border: none;
                 background-color: transparent;
-                color: $bodyTextColor;
+                color: $errorColor;
                 font-size: 16px;
                 font-weight: 400;
                 cursor: pointer;
@@ -49,6 +49,9 @@
 
             p {
                 margin-bottom: 0px;
+            }
+            .fa-star {
+                color: $primaryColor;
             }
         }
 

@@ -6,13 +6,13 @@
         {% include ['navbar.html'] %}
         {% include ['confirmModal.html'] %}
         <div class="container">
-            <div class="row">
+            <div class="row createRecipeTitle">
                 <div class="col-sm-12">
                     <center><h3>Create Recipe</h3></center>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm" style="margin-top:5%">
+                <div class="col-sm" style="margin:5% 0% 10% 0%">
                     <form id="createRecipeForm" action="{{ url_for('createRecipe')}}" method="post" enctype="multipart/form-data">
                         <div class="form-group row">
                             <div class="col-8">
@@ -34,28 +34,30 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-12">
-                                <p class="form-input-title">Method</p>
+                                <p class="form-input-title">Instructions</p>
                                 {{ ckeditor.create() }}
                             </div>
                         </div>
                         <div class="form-group row justify-content-between">
-                            <div class="col-4">
+                            <div class="col-6">
                                 <p class="form-input-title">Add Image</p>
                                 <input type="file" name="recipeImage" class="recipeImageUpload">
                             </div>
-                            <div class="col-8 row justify-content-between">
-                                <div class="col-4">
+                            <div class="col-6 row justify-content-between">
+                                <div class="col-12">
                                     <p class="form-input-title">Servings</p>
                                     <input type="number" name="servings" placeholder=""></input>
                                 </div>
-                                <div class="col-4">
-                                    <p class="form-input-title">Prep Time</p>
-                                    <input type="text" name="prepTime" placeholder="Enter Time"></input>
-                                </div>
-                                <div class="col-4">
-                                    <p class="form-input-title">Cook Time</p>
-                                    <input type="text" name="prepTime" placeholder="Enter Time"></input>
-                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row justify-content-between">
+                            <div class="col-5">
+                                <p class="form-input-title">Prep Time</p>
+                                <input type="text" name="prepTime" placeholder="Enter Time"></input>
+                            </div>
+                            <div class="col-6">
+                                <p class="form-input-title">Cook Time</p>
+                                <input type="text" name="prepTime" placeholder="Enter Time"></input>
                             </div>
                         </div>
                         <div class="form-group row">
