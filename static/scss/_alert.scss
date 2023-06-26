@@ -1,3 +1,20 @@
 .alert {
+    margin-top: 96px;
     margin-bottom: -80px;
+    position: fixed;
+    width: 100%;
+}
+
+.alert-success {
+    background-color: $primaryColor;
+    border-color: $primaryColor;
+    border-radius: 0px 0px 10px 10px;
+    color: white;
+}
+
+.alert-danger {
+    background-color: $errorColor;
+    border-color: $errorColor;
+    border-radius: 0px 0px 10px 10px;
+    color: white;
 }
