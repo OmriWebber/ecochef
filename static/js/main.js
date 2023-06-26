@@ -82,7 +82,12 @@ $(".heart").click(function(){
     $.ajax(settings).done(function (response) {
       icon.removeClass('fa').addClass('far');
       parent.attr('data-action', 'save');
-      console.log(response);
+      $('#alertId').removeClass('hide').removeClass('alert-success').addClass('alert-danger');
+      $('#alertId').children('center').children('span').text("Recipe Removed!");
+
+      setTimeout(function() {
+        $("#alertId").addClass('hide');
+      }, 3000);
     });
   } else if (action == 'save') {
     var settings = {
@@ -92,17 +97,19 @@ $(".heart").click(function(){
       "headers": {
         "x-access-token": token,
         "Content-Type": "application/json"
-      },
-      "data": JSON.stringify({
-        "user_id": 1,
-        "recipe_id": id
-      }),
+      }
     };
     
     $.ajax(settings).done(function (response) {
       icon.removeClass('far').addClass('fa');
       parent.attr('data-action', 'unsave');
-      console.log(response);
+      $('#alertId').removeClass('hide').removeClass('alert-danger').addClass('alert-success');
+      $('#alertId').children('center').children('span').text("Recipe Saved!");
+
+      setTimeout(function() {
+        $("#alertId").addClass('hide');
+      }, 3000);
+
     });
   }
   
