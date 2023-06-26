@@ -1,7 +1,6 @@
 $(document).ready(function() {
     // Add button click event
     $('#addServingsButton').click(function() {
-        console.log("test");
         var servings = $('#servingsCount').text();
         var oldServings = servings;
         servings++;
@@ -11,7 +10,6 @@ $(document).ready(function() {
   
     // Subtract button click event
     $('#minusServingsButton').click(function() {
-        console.log("test");
         var servings = $('#servingsCount').text();
         var oldServings = servings;
         if (servings > 1) {
