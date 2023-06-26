@@ -2,7 +2,7 @@
     float: right;
 }
 
-.btn-primary {
+.btn-primary, .btn-success {
     color: #fff;
     border-radius: 50px;
     padding: 8px 40px;
@@ -50,4 +50,13 @@
     font-size: 12px;
     padding: 8px;
     border-radius: 0px 0px 10px 0px;
+}
+
+#recipeSubmitFormButton {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.deleteIngredientButton i {
+    margin-right: 0px;
 }

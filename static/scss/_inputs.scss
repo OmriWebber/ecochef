@@ -1,5 +1,12 @@
 .form-group {
     padding: 5px;
+    input {
+        width: 100%;
+    }
+
+    .recipeImageUpload {
+        width: 120%;
+    }
 }
   
 .form-input-title {
@@ -38,4 +45,5 @@
     .remove-ingredient {
         color: $errorColor;
     }
+    
 }
