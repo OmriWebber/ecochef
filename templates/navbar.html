@@ -47,9 +47,9 @@
 
   {% with messages = get_flashed_messages() %}
     {% if messages %}
-      <div id="alert" class='alert alert-light' role="alert">
+      <div id="alert" class='alert alert-success' role="alert">
         {% for message in messages %}
-          {{ message }}
+          <center>{{ message }}</center>
         {% endfor %}
       </div>
     {% endif %}
