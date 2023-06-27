@@ -17,18 +17,24 @@
                 <div class="row">
                     <div class="col-8 recipeTitleContainer">
                         <h3 class="recipeTitle">{{recipe.title}}</h3>
-                        {% set ns = namespace(liked=false) %}
-                        {% for like in likes %}
-                            {% if like.recipe_id == recipe.id %}
-                                {% set ns.liked = true %}                     
+                        {% if session['user'] %}
+                            {% set ns = namespace(liked=false) %}
+                            {% for like in likes %}
+                                {% if like.recipe_id == recipe.id %}
+                                    {% set ns.liked = true %}                     
+                                {% endif %}
+                            {% endfor %}        
+                            {% if ns.liked %}
+                                <a data-id="{{recipe.id}}" data-action="unsave" data-token="{{session['user']['token']}}" class="heart">
+                                    <i class="fa fa-heart"></i>
+                                </a>                                        
+                            {% else %}
+                                <a data-id="{{recipe.id}}" data-action="save" data-token="{{session['user']['token']}}" class="heart">
+                                    <i class="far fa-heart"></i>
+                                </a>
                             {% endif %}
-                        {% endfor %}        
-                        {% if ns.liked %}
-                            <a data-id="{{recipe.id}}" data-action="unsave" data-token="{{session['user']['token']}}" class="heart">
-                                <i class="fa fa-heart"></i>
-                            </a>                                        
                         {% else %}
-                            <a data-id="{{recipe.id}}" data-action="save" data-token="{{session['user']['token']}}" class="heart">
+                            <a href="{{ url_for('auth.login') }}" class="heart">
                                 <i class="far fa-heart"></i>
                             </a>
                         {% endif %}
