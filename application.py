@@ -27,6 +27,7 @@ application.register_blueprint(auth_blueprint)
 def index():
     url = Config.API_URL + '/recipes'
     response = requests.get(url)
+    print(response.status_code)
     if response.status_code == 404:
         recipes = "No Recipes Found"
         flash("No Recipes Found", 404)
@@ -54,9 +55,9 @@ def index():
             LikesList = []
             for likes in JsonUser['likes']:
                 LikesList.append(likes)
-            return render_template("index.html", recipes=recipes, likes=LikesList, name="Ecochef")
-        return render_template("index.html", recipes=recipes, name="Ecochef")
-    return render_template("index.html", recipes=recipes, likes=LikesList, name="Ecochef")
+            return render_template("index.html", recipes=recipes, count=recipes['count'], likes=LikesList, name="Ecochef")
+        return render_template("index.html", recipes=recipes, count=recipes['count'], name="Ecochef")
+    return render_template("index.html", recipes=recipes, count=recipes['count'], likes=LikesList, name="Ecochef")
     
     
 @application.route("/search", methods=["POST", "GET"])
@@ -79,10 +80,11 @@ def searchByIngredients():
         flash("Incorrect Query", 100)
     else:
         recipes = response.json()
-        msg = "Found " + str(len(recipes)) + " recipes"
+
+        msg = "Found " + str(len(recipes['results'])) + " recipes"
         flash(msg , 200)
-        return render_template("results.html", recipes=recipes, name="Ecochef")
-    return render_template("search.html", name="Ecochef", results=results)
+        return render_template("results.html", recipes=recipes['results'], name="Ecochef")
+    return render_template("search.html", name="Ecochef")
 
 
 @application.route("/recipe/<id>", methods=["GET"])
@@ -118,8 +120,8 @@ def recipe(id):
             LikesList = []
             for likes in JsonUser['likes']:
                 LikesList.append(likes)
-        
-        return render_template("recipe.html", recipe=recipe, ingredients=ingredientIDs, likes=LikesList, reviews=reviews, name="Ecochef")
+            return render_template("recipe.html", recipe=recipe, ingredients=ingredientIDs, likes=LikesList, reviews=reviews, name="Ecochef")
+        return render_template("recipe.html", recipe=recipe, ingredients=ingredientIDs, reviews=reviews, name="Ecochef")
     print(recipe)
     return render_template("recipe.html", name="Ecochef")
 
