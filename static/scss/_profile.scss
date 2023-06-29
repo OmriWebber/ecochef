@@ -1,0 +1,38 @@
+.content_profile {
+    .col-md-4 {
+        padding: 10px 30px;
+        border-radius: 5px 5px 0px 0px;
+        color: $bodyTextColor;
+        text-decoration: none;
+        text-align: left;
+        transition: 0.5s ease-in-out;
+
+        .profile-label {
+            font-size: 12px;
+            color:#212529
+        }
+
+        .form-control {
+            border: none;
+            font-size: 18px;
+            background: none;
+            border-radius: 0px;
+            border-bottom: 1px solid #212529;
+        }
+    }
+
+    .logout {
+        text-align: center;
+        margin-top: 100px;
+        margin-bottom: 20px;
+
+        a {
+            color: $errorColor;
+            text-decoration: none;
+        }
+    }
+
+
+
+
+}

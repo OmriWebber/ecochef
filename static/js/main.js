@@ -115,5 +115,16 @@ $(".heart").click(function(){
   
 });
 
+function htmlEntityChecker(input) {
+  var characterArray = ['&amp;', '&nbsp;', '&#39;'];
+  $.each(characterArray, function(idx, ent) {
+      if (input.indexOf(ent) != -1) {
+          var re = new RegExp(ent, "g");
+          input = input.replace(re, '<span>' + ent + '</span>');
+      }
+  });
+  return input;
+}
+
 
 

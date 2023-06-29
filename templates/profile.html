@@ -7,23 +7,25 @@
     {% include ['changePasswordModal.html'] %}
     <div class="container userContainer">
         <div class="row content_profile">
-            <div class="col-8">
-                <h1>{{ user.username }}'s profile</h1>
-                
+            <div class="col-12">
+                <center><h1 class='profile-title'>{{ user.username }}'s profile</h1></center>
             </div>
-            <div class="col-4">
-                <a class="btn btn-info changeEmail">Change Email</a>
-                <a class="btn btn-danger changePassword">Change Password</a>
-            </div>
-            <div class="row">
-                <div class="col-6">
 
-                </div>
-                <div class="col-6">
-
-                </div>
+            <div class="col-md-4">
+                <span class="profile-label">Username</span>
+                <input type="text" class="form-control" id="username" value="{{ user.username }}" disabled>
             </div>
-            
+            <div class="col-md-4">
+                <span class="profile-label">Email</span>
+                <input type="text" class="form-control" id="email" value="{{ user.email }}" disabled>
+            </div>
+            <div class="col-md-4">
+                <span class="profile-label col">Password</span>
+                <input type="password" class="form-control" id="password" value="********"  disabled>
+            </div>
+            <div class="col-12 logout">
+                <a class="" href="{{ url_for('auth.logout') }}">Logout</a>
+            </div>
         </div>
         {% if user.is_Admin %}
             <hr class="hrSpacer">

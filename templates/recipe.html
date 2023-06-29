@@ -8,7 +8,7 @@
         <div class="container-fluid recipe-container">
             <div class="row">
                 <div class="col-4 goBackButton">
-                    <a onclick="go_back()"><i class="fa fa-arrow-left"></i> Go Back</a>
+                    <a onclick="history.back()"><i class="fa fa-arrow-left"></i> Go Back</a>
                 </div>
                 <img class="recipeImage" src="{{ recipe.imageURL }}">
             </div>
@@ -56,7 +56,7 @@
                     </div>
                     <div class="col">
                         <p class="recipeTimeIcon"><i class="fa-regular fa-clock"></i></p>
-                        <p class="recipeTime text-muted">{{recipe.totalTime}} </p>
+                        <p class="recipeTime text-muted">{{recipe.cookTime|int + recipe.prepTime|int}} mins</p>
                     </div>
                     <div class="col">
                         <p class="recipeIngredientsCount">{{ recipe.ingredients|length }}</p>

@@ -31,9 +31,9 @@ def index():
     if response.status_code == 404:
         recipes = "No Recipes Found"
         flash("No Recipes Found", 404)
-    elif response.status_code == 100:
-        recipes = "Incorrect Query"
-        flash("Incorrect Query", 100)
+    elif response.status_code == 500:
+        recipes = "Server Error, Cant load recipes"
+        flash("Incorrect Query", 500)
     else:
         recipes = response.json()
         categories = []
@@ -57,7 +57,7 @@ def index():
                 LikesList.append(likes)
             return render_template("index.html", recipes=recipes, count=recipes['count'], likes=LikesList, name="Ecochef")
         return render_template("index.html", recipes=recipes, count=recipes['count'], name="Ecochef")
-    return render_template("index.html", recipes=recipes, count=recipes['count'], likes=LikesList, name="Ecochef")
+    return render_template("index.html", recipes=recipes, name="Ecochef")
     
     
 @application.route("/search", methods=["POST", "GET"])
@@ -73,17 +73,16 @@ def searchByIngredients():
     headers = { 'Content-Type': 'application/json' }
     response = requests.get(url, headers=headers, data=payload)
     if response.status_code == 404:
-        results = "No Recipes Found"
+        recipes = "No Recipes Found"
         flash("No Recipes Found", 404)
     elif response.status_code == 100:
-        results = "Incorrect Query"
+        recipes = "Incorrect Query"
         flash("Incorrect Query", 100)
     else:
         recipes = response.json()
-
         msg = "Found " + str(len(recipes['results'])) + " recipes"
         flash(msg , 200)
-        return render_template("results.html", recipes=recipes['results'], name="Ecochef")
+        return render_template("results.html", recipes=recipes, name="Ecochef")
     return render_template("search.html", name="Ecochef")
 
 
@@ -144,9 +143,6 @@ def favourites():
     return render_template('savedRecipes.html', recipes=favourites, likes=LikesList, name="Ecochef")
 
 
-
-
-
 @application.route("/profile")
 def profile():
     url = Config.API_URL + '/currentuser'
@@ -160,13 +156,6 @@ def profile():
     print(response.json())
     user = response.json()['user']
     return render_template('profile.html', user=user, name="Ecochef")
-
-
-
-
-
-
-
 
 
 @application.route("/createRecipe", methods=["POST", "GET"])

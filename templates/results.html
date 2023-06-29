@@ -26,28 +26,28 @@
                 
             </div>
             <div class="recipeGrid">
-                {% for recipe in recipes %}
+                {% for recipe in recipes.results %}
                     {% if loop.index % 2 == 1 %}
                         <div class="row">
                     {% endif %}
         
                             <div class="col recipe">
-                                <a href="recipe/ {{ recipe.id }}">
-                                    <img class="recipe-image" src={{ recipe.imageURL }}>
+                                <a href="recipe/ {{ recipe.recipe.id }}">
+                                    <img class="recipe-image" src={{ recipe.recipe.imageURL }}>
                                     <div class="favorite-overlay">
                                         {% if session['user'] %}
                                             {% set ns = namespace(liked=false) %}
                                             {% for like in likes %}
-                                                {% if like.recipe_id == recipe.id %}
+                                                {% if like.recipe_id == recipe.recipe.id %}
                                                     {% set ns.liked = true %}                     
                                                 {% endif %}
                                             {% endfor %}        
                                             {% if ns.liked %}
-                                                <a data-id="{{recipe.id}}" data-action="unsave" data-token="{{session['user']['token']}}" class="heart">
+                                                <a data-id="{{recipe.recipe.id}}" data-action="unsave" data-token="{{session['user']['token']}}" class="heart">
                                                     <i class="fa fa-heart"></i>
                                                 </a>                                        
                                             {% else %}
-                                                <a data-id="{{recipe.id}}" data-action="save" data-token="{{session['user']['token']}}" class="heart">
+                                                <a data-id="{{recipe.recipe.id}}" data-action="save" data-token="{{session['user']['token']}}" class="heart">
                                                     <i class="far fa-heart"></i>
                                                 </a>
                                             {% endif %}
@@ -58,7 +58,7 @@
                                         {% endif %}
                                     </div>
                                     <div class="overlay">
-                                        <p class="recipe-title">{{ recipe.title }}</p>
+                                        <p class="recipe-title">{{ recipe.recipe.title }}</p>
                                     </div>
                                 </a>
                                 
